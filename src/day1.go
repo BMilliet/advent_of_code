@@ -17,18 +17,16 @@ func (d *Day1) Loaded() {
 func (d *Day1) PartOne() {
 	file, err := os.Open("inputs/day_1.txt")
 	if err != nil {
-		fmt.Println("Erro ao abrir o arquivo:", err)
+		fmt.Println("Erro openning:", err)
 		return
 	}
 	defer file.Close()
 
-	// Criar um scanner para ler o arquivo linha por linha
 	scanner := bufio.NewScanner(file)
 
 	list1 := []int{}
 	list2 := []int{}
 
-	// Iterar pelas linhas
 	for scanner.Scan() {
 		line := scanner.Text()
 		parts := strings.Fields(line)
@@ -38,9 +36,8 @@ func (d *Day1) PartOne() {
 		list2 = append(list2, e2)
 	}
 
-	// Verificar se houve erro durante a leitura
 	if err := scanner.Err(); err != nil {
-		fmt.Println("Erro durante a leitura do arquivo:", err)
+		fmt.Println("Error reading:", err)
 	}
 
 	list1 = quickSort(list1)
