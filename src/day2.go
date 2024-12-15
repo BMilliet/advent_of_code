@@ -37,57 +37,91 @@ func (d *Day2) PartOne() {
 
 		}
 
-		// up, down or empty
-		limitIndex := len(lineArr)
-		direction := ""
-		previous := 0
-		isUnsafe := false
-
-		for i := 0; i < limitIndex; i++ {
-
-			e := lineArr[i]
-
-			if i == 0 {
-				previous = e
-				continue
-			}
-
-			eval := e - previous
-
-			if eval > 0 {
-				if eval > 3 || direction == "down" {
-					// unsafe
-					isUnsafe = true
-					break
-				}
-
-				direction = "up"
-				previous = e
-			} else if eval < 0 {
-				if eval < -3 || direction == "up" {
-					// unsafe
-					isUnsafe = true
-					break
-				}
-
-				direction = "down"
-				previous = e
-			} else {
-				if direction != "flat" || e != previous {
-					// unsafe
-					isUnsafe = true
-					break
-				}
-				direction = "flat"
-				previous = e
-			}
-
-		}
-
-		if !isUnsafe {
-			safeReports += 1
+		if d.isSafe(lineArr) {
+			safeReports++
 		}
 	}
 
 	fmt.Println(safeReports)
+}
+
+func (d *Day2) PartTwo() {
+	file, err := os.Open("inputs/day_2.txt")
+	if err != nil {
+		fmt.Println("Erro openning:", err)
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	safeReports := 0
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.Split(line, " ")
+		lineArr := []int{}
+
+		for _, str := range parts {
+			n, _ := strconv.Atoi(str)
+			lineArr = append(lineArr, n)
+
+		}
+
+		if d.isSafe(lineArr) {
+			safeReports++
+		} else {
+			if d.isSafeWithDeletion(lineArr) {
+				safeReports++
+			}
+		}
+	}
+
+	fmt.Println(safeReports)
+}
+
+func (d *Day2) isSafeWithDeletion(list []int) bool {
+	for i := 0; i < len(list); i++ {
+
+		// copy of the original list
+		listCopy := make([]int, len(list))
+		copy(listCopy, list)
+
+		// remove current element from list
+		tempList := removeElement(listCopy, i)
+
+		if d.isSafe(tempList) {
+			return true
+		}
+
+	}
+	return false
+}
+
+func (d *Day2) isSafe(list []int) bool {
+	direction := list[1] > list[0]
+	limitIndex := len(list)
+
+	if direction {
+		// incresing
+
+		for i := 1; i < limitIndex; i++ {
+			diff := list[i] - list[i-1]
+			if diff > 3 || diff < 1 {
+				return false
+			}
+		}
+		return true
+
+	} else {
+		// decreasing
+
+		for i := 1; i < limitIndex; i++ {
+			diff := list[i] - list[i-1]
+			if diff < -3 || diff > -1 {
+				return false
+			}
+		}
+		return true
+	}
 }

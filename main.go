@@ -12,5 +12,5 @@ func main() {
 	day1.Loaded()
 	day2.Loaded()
 
-	day2.PartOne()
+	day2.PartTwo()
 }
