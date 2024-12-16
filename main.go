@@ -8,9 +8,11 @@ func main() {
 
 	day1 := src.Day1{}
 	day2 := src.Day2{}
+	day3 := src.Day3{}
 
 	day1.Loaded()
 	day2.Loaded()
+	day3.Loaded()
 
-	day2.PartTwo()
+	day3.PartTwo()
 }
