@@ -78,8 +78,50 @@ func (d *Day4) PartTwo() {
 }
 
 func (d *Day4) countXMas(grid [][]string) int {
-	// WIP todo search for MAS in X shape
-	return 0
+	count := 0
+
+	rows := len(grid)
+	cols := len(grid[0])
+
+	for row := 1; row < rows-1; row++ {
+		for col := 1; col < cols-1; col++ {
+
+			pivot := grid[row][col]
+
+			if pivot == "A" {
+				topLeft := grid[row-1][col-1]
+				topRight := grid[row-1][col+1]
+				bottomLeft := grid[row+1][col-1]
+				bottomRight := grid[row+1][col+1]
+
+				if d.shouldCountX(topLeft, topRight, bottomLeft, bottomRight) {
+					count++
+				}
+			}
+		}
+	}
+
+	return count
+}
+
+func (d *Day4) shouldCountX(topL, topR, bottomL, bottomR string) bool {
+	if topL == "M" && bottomR == "S" && bottomL == "M" && topR == "S" {
+		return true
+	}
+
+	if topL == "S" && bottomR == "M" && bottomL == "S" && topR == "M" {
+		return true
+	}
+
+	if topL == "M" && bottomR == "S" && bottomL == "S" && topR == "M" {
+		return true
+	}
+
+	if topL == "S" && bottomR == "M" && bottomL == "M" && topR == "S" {
+		return true
+	}
+
+	return false
 }
 
 func (d *Day4) findDiagonalTop(grid [][]string) int {
@@ -117,7 +159,6 @@ func (d *Day4) findDiagonalBottom(grid [][]string) int {
 }
 
 func (d *Day4) findVertical(grid [][]string) int {
-
 	newGrid := [][]string{}
 
 	limitCol := len(grid[0])
